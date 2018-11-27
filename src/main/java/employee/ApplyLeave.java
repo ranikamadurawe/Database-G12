@@ -12,9 +12,14 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +39,8 @@ import logindetails.loginpage;
  */
 public class ApplyLeave extends javax.swing.JFrame {
     
-    static ApplyLeave applyLeave;
+    protected static final JOptionPane JSpinner1 = null;
+	static ApplyLeave applyLeave;
 
     /**
      * Creates new form ApplyLeave
@@ -48,15 +54,15 @@ public class ApplyLeave extends javax.swing.JFrame {
         jSpinner1.setValue(Integer.valueOf(cal.get(Calendar.YEAR)));
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor( jSpinner1, "#" );
         jSpinner1.setEditor( editor );
-        jSpinner2.setValue(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-        jSpinner3.setValue(Integer.valueOf(cal.get(Calendar.MONTH)));
+        jSpinner3.setValue(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)+1));
+        jSpinner2.setValue(Integer.valueOf(cal.get(Calendar.MONTH)));
 
         
         jSpinner7.setValue(Integer.valueOf(cal.get(Calendar.YEAR)));
         JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor( jSpinner7, "#" );
         jSpinner7.setEditor( editor2 );
-        jSpinner8.setValue(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-        jSpinner9.setValue(Integer.valueOf(cal.get(Calendar.MONTH)));
+        jSpinner9.setValue(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)+1));
+        jSpinner8.setValue(Integer.valueOf(cal.get(Calendar.MONTH)));
 
         
     }
@@ -120,7 +126,27 @@ public class ApplyLeave extends javax.swing.JFrame {
         jButton1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
+				Connection c = loginpage.createLoginpage().getConnection();
+				try {
+					PreparedStatement p = c.prepareStatement("insert into leavesubmissions(eid,date,enddate,type,reason,status) values(?,?,?,?,?)");
+					p.setString(1, loginpage.geteid());
+					String begindate = jSpinner1.getValue()+"-"+jSpinner3.getValue()+"-"+jSpinner2.getValue();
+					String enddate =  jSpinner7.getValue()+"-"+jSpinner9.getValue()+"-"+jSpinner8.getValue();
+					java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(begindate);
+					Date sqlDate = new Date(utilDate.getTime());
+					java.util.Date utilDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(enddate);
+					Date sqlDate2 = new Date(utilDate.getTime());
+					p.setDate(2, sqlDate);
+					p.setDate(3, sqlDate2);
+					p.setString(4, jComboBox1.getSelectedItem().toString());
+					p.setString(5, "Pending");
+				} catch ( SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 		});
