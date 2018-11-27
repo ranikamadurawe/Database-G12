@@ -71,6 +71,9 @@ public class AddAdditional extends JFrame {
 		
 		try {
 			PreparedStatement p = c.prepareStatement("select * from (select name,eid from employeepersonal left join employeedetails using(eid) where supervisorid = ?) as t1 join employeeadditional using(eid)");
+			if(loginpage.getrole().equals("admin")) {
+				p = c.prepareStatement("select * from (select name,eid from employeepersonal left join employeedetails using(eid) where supervisorid = ? or supervisorid is null) as t1 join employeeadditional using(eid)");
+			}		
 			p.setString(1, loginpage.geteid());
 			System.out.println("ds");
 			ResultSet rs =p.executeQuery();
@@ -121,7 +124,8 @@ public class AddAdditional extends JFrame {
 									if(columnDatatype.get(i)==12) {
 										ps.setString(i+1, (String)table_1.getModel().getValueAt(j-1, i+2));
 									}else if(columnDatatype.get(i)==4) {
-											ps.setInt(i+1, Integer.parseInt((String)table_1.getModel().getValueAt(j-1, i+2)));	
+											System.out.println(table_1.getModel().getValueAt(j-1, i+2));
+											ps.setInt(i+1, Integer.valueOf(table_1.getModel().getValueAt(j-1, i+2).toString()));	
 									}else if(columnDatatype.get(i)==91) {
 										String chosenbday = (String)table_1.getModel().getValueAt(j-1, i+2);
 										java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(chosenbday);
