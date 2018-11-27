@@ -1,0 +1,14 @@
+Salaries per Department
+sum(salary)	name	
+
+8000000.00	Computing Dept	
+Salaries per Department
+name	type	leaves	
+
+Marketing Dept	Annual	1	
+Marketing Dept	Casual	1	
+Marketing Dept	No-pay	1	
+Salaries per Department
+name	totalleaves	
+
+Marketing Dept	3	
