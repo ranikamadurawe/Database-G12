@@ -82,7 +82,8 @@ public class AddRole extends JFrame {
 					ps.setString(2, accesslevel.getSelectedItem().toString());
 					ps.setString(1, Rolename.getText());
 					ps.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Inserted");
+					ps.close();
+					JOptionPane.showMessageDialog(null, "Added new Role");
 					
 
 				} catch (SQLException e) {

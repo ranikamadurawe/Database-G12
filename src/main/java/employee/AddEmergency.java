@@ -18,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class AddEmergency extends JFrame {
 
@@ -25,6 +27,9 @@ public class AddEmergency extends JFrame {
 	private JTextField name;
 	private JTextField phone;
 	private JTextField mail;
+	private JLabel lblEmail;
+	private JLabel lblPhone;
+	private JLabel lblName;
 
 	/**
 	 * Launch the application.
@@ -54,17 +59,17 @@ public class AddEmergency extends JFrame {
 		contentPane.setLayout(null);
 		
 		name = new JTextField();
-		name.setBounds(160, 72, 86, 20);
+		name.setBounds(285, 70, 86, 20);
 		contentPane.add(name);
 		name.setColumns(10);
 		
 		phone = new JTextField();
-		phone.setBounds(160, 103, 86, 20);
+		phone.setBounds(285, 101, 86, 20);
 		contentPane.add(phone);
 		phone.setColumns(10);
 		
 		mail = new JTextField();
-		mail.setBounds(160, 134, 86, 20);
+		mail.setBounds(285, 132, 86, 20);
 		contentPane.add(mail);
 		mail.setColumns(10);
 		
@@ -79,15 +84,27 @@ public class AddEmergency extends JFrame {
 					p.setString(3, phone.getText());
 					p.setString(4, mail.getText());
 					p.executeUpdate();
-					p.setString(1, loginpage.geteid());
-					p.executeUpdate();
+					JOptionPane.showMessageDialog(null, "Added Emergency Contact");
+					p.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e);
 					e.printStackTrace();
 				}
 			}
 		});
 		btnAdd.setBounds(157, 177, 89, 23);
 		contentPane.add(btnAdd);
+		
+		lblEmail = new JLabel("Email");
+		lblEmail.setBounds(95, 135, 46, 14);
+		contentPane.add(lblEmail);
+		
+		lblPhone = new JLabel("Phone");
+		lblPhone.setBounds(95, 104, 46, 14);
+		contentPane.add(lblPhone);
+		
+		lblName = new JLabel("Name");
+		lblName.setBounds(95, 73, 46, 14);
+		contentPane.add(lblName);
 	}
 }

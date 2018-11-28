@@ -40,6 +40,7 @@ public class AddEmployee extends javax.swing.JFrame {
 			}else {
 				next = "e"+nextid;
 			}
+			rs.close();
 			return next;	
 		}catch(SQLException e) {
 			
@@ -99,7 +100,10 @@ public class AddEmployee extends javax.swing.JFrame {
         	queryInit = "select distinct rolename from jobtitiles";
 			rsInit = sInit.executeQuery(queryInit);
 			while( rsInit.next() ) {
-				jComboBox4.addItem( rsInit.getString(1) );
+				if(!rsInit.getString(1).equals("admin")) {
+					jComboBox4.addItem( rsInit.getString(1) );
+				}
+				
 			}
 			rsInit.close();
 			
@@ -437,17 +441,11 @@ public class AddEmployee extends javax.swing.JFrame {
     			
     			Statement s = c.createStatement();
     			s.executeUpdate(query1);
-    			System.out.println("s");
     			s.executeUpdate(query2);
-    			System.out.println("ss");
     			s.executeUpdate(query3);
-    			System.out.println("sss");
     			p.executeUpdate();
-    			System.out.println("ssss");
     			s.executeUpdate(query5);
-    			System.out.println("sssss");
     			p7.executeUpdate();
-    			System.out.println("ssssss");
     			
     			c.commit();
     			    			

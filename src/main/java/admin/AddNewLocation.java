@@ -67,6 +67,7 @@ public class AddNewLocation extends JFrame {
 			}else {
 				next = "b"+nextid;
 			}
+			rs.close();
 			return next;	
 		}catch(SQLException e) {
 			
@@ -124,8 +125,9 @@ public class AddNewLocation extends JFrame {
 					ps.setString(2, address.getText());
 					ps.setString(3, branchname.getText());
 					ps.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Added");
+					JOptionPane.showMessageDialog(null, "Added New Location");
 					setVisible(false);
+					ps.close();
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null, "Error"+e);
 					e.printStackTrace();

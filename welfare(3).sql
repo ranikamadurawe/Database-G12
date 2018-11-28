@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2018 at 07:25 AM
+-- Generation Time: Nov 28, 2018 at 06:50 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -21,6 +21,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `welfare`
 --
+
+DELIMITER $$
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `getsup` (`givenid` VARCHAR(5)) RETURNS INT(11) NO SQL
+    DETERMINISTIC
+begin
+declare nums int;
+set nums=0;
+select count(eid) INTO nums from employeedetails  where supervisorid = givenid;
+return nums;
+end$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `hashpass` (`password` VARCHAR(255)) RETURNS VARCHAR(255) CHARSET latin1 return sha1(password)$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -121,7 +138,9 @@ INSERT INTO `empcontact` (`eid`, `contact`) VALUES
 ('e0010', '8321321332'),
 ('e0012', '0999999999'),
 ('e1235', '1111111111'),
-('e1236', '1234567890');
+('e1236', '1234567890'),
+('e1237', '0999999999'),
+('e1238', '1234567890');
 
 --
 -- Triggers `empcontact`
@@ -214,9 +233,11 @@ INSERT INTO `employeeadditional` (`eid`, `s`, `sda`, `No_Children`) VALUES
 ('e0007', 2, 'random', 4),
 ('e0009', 5, 'something', 0),
 ('e0010', 1, 'ela', 2),
-('e0012', 2, 'e', 5),
+('e0012', 23, 'e', 5),
 ('e1235', NULL, NULL, NULL),
-('e1236', NULL, NULL, NULL);
+('e1236', NULL, NULL, NULL),
+('e1237', NULL, NULL, NULL),
+('e1238', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -229,29 +250,30 @@ CREATE TABLE `employeedetails` (
   `supervisorid` varchar(5) DEFAULT NULL,
   `deptid` varchar(5) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `issuper` tinyint(1) DEFAULT NULL
+  `title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `employeedetails`
 --
 
-INSERT INTO `employeedetails` (`eid`, `supervisorid`, `deptid`, `status`, `title`, `issuper`) VALUES
-('e0000', 'e0001', 'd0002', 'temporary', 'hr', 1),
-('e0001', 'e0002', 'd0001', 'temporary', 'admin', 0),
-('e0002', 'e0003', 'd0001', 'temporary', 'hr', 1),
-('e0003', 'e0004', 'd0001', 'temporary', 'hr', 1),
-('e0004', 'e0005', 'd0001', 'temporary', 'hr', 0),
-('e0005', 'e1236', 'd0001', 'temporary', 'hr', 0),
-('e0006', NULL, 'd0001', 'temporary', 'hr', 0),
-('e0007', NULL, 'd0001', 'temporary', 'hr', 0),
-('e0009', NULL, 'd0001', 'temporary', 'hr', 0),
-('e0010', NULL, 'd0002', 'temporary', 'hr', 0),
-('e0012', NULL, 'd0002', 'permanent', 'hr', NULL),
-('e1234', NULL, 'd0001', 'freelancer\r\n', 'admin', NULL),
-('e1235', NULL, 'd0001', 'freelancer\r\n', 'admin', NULL),
-('e1236', NULL, 'd0001', 'permanent', 'Johhny', NULL);
+INSERT INTO `employeedetails` (`eid`, `supervisorid`, `deptid`, `status`, `title`) VALUES
+('e0000', 'e0001', 'd0002', 'temporary', 'hr'),
+('e0001', 'e0002', 'd0001', 'temporary', 'admin'),
+('e0002', 'e0003', 'd0001', 'temporary', 'hr'),
+('e0003', 'e0004', 'd0001', 'temporary', 'hr'),
+('e0004', 'e0005', 'd0001', 'temporary', 'hr'),
+('e0005', 'e1236', 'd0001', 'temporary', 'hr'),
+('e0006', NULL, 'd0001', 'temporary', 'hr'),
+('e0007', NULL, 'd0001', 'temporary', 'hr'),
+('e0009', NULL, 'd0001', 'temporary', 'hr'),
+('e0010', NULL, 'd0002', 'temporary', 'hr'),
+('e0012', NULL, 'd0002', 'permanent', 'hr'),
+('e1234', NULL, 'd0001', 'freelancer\r\n', 'admin'),
+('e1235', NULL, 'd0001', 'freelancer\r\n', 'admin'),
+('e1236', NULL, 'd0001', 'permanent', 'Johhny'),
+('e1237', NULL, 'd0001', 'permanent', 'hr'),
+('e1238', NULL, 'd0001', 'permanent', 'hr');
 
 --
 -- Triggers `employeedetails`
@@ -312,7 +334,9 @@ INSERT INTO `employeepersonal` (`eid`, `name`, `nic`, `nationality`, `maritalsta
 ('e0012', 'ras', '214214214v', 'sdfsdf', 'Married', '0002-11-30', 'kkkkkk', 'h@hh.com'),
 ('e1234', 'rabu', '555555555v', 'sdfsf', 'Married', NULL, 'adsd', 'd@g.com'),
 ('e1235', 'e', '999999994v', '3', 'Married', NULL, 'd', 'ra@d.com'),
-('e1236', 'lak', '545454545v', 'zel', 'Married', NULL, 'd', 'd@l.com');
+('e1236', 'lak', '545454545v', 'zel', 'Married', NULL, 'd', 'd@l.com'),
+('e1237', 'dilan', '887788778v', 'sinhala', 'Married', '2000-10-12', 'nowhere', 'r@d,cin'),
+('e1238', 'hiran', '123143123v', 'paka', 'Married', '0002-11-30', 'galle', 'd@f.com');
 
 --
 -- Triggers `employeepersonal`
@@ -367,7 +391,9 @@ INSERT INTO `emppay` (`eid`, `epid`, `epf`) VALUES
 ('e0010', 'pg0001', 200),
 ('e0012', 'pg0001', 0),
 ('e1235', 'pg0001', 10),
-('e1236', 'pg0001', 10);
+('e1236', 'pg0001', 10),
+('e1237', 'pg0001', 4),
+('e1238', 'pg0001', 3);
 
 --
 -- Triggers `emppay`
@@ -427,7 +453,8 @@ CREATE TABLE `jobtitiles` (
 INSERT INTO `jobtitiles` (`rolename`, `name`) VALUES
 ('admin', 'admin'),
 ('hr', 'hr'),
-('Johhny', 'level1 employee');
+('Johhny', 'level1 employee'),
+('Security Guard', 'level1 employee');
 
 --
 -- Triggers `jobtitiles`
@@ -466,7 +493,9 @@ INSERT INTO `leaveleft` (`eid`, `annual`, `casual`, `maturity`, `nopay`) VALUES
 ('e0003', 10, 15, 6, 7),
 ('e0012', 0, 0, 50, 0),
 ('e1235', 0, 0, 50, 0),
-('e1236', 0, 0, 49, 0);
+('e1236', 0, 0, 17, 0),
+('e1237', 0, 0, 50, 0),
+('e1238', 0, 0, 50, 0);
 
 -- --------------------------------------------------------
 
@@ -489,11 +518,12 @@ CREATE TABLE `leavesubmissions` (
 --
 
 INSERT INTO `leavesubmissions` (`eid`, `leaveid`, `type`, `date`, `enddate`, `reason`, `status`) VALUES
-('e0001', 'l0005', 'casual', '2018-11-08', '2018-11-15', 'yay', ''),
-('e0001', 'l0006', 'casual', '2018-11-29', '2018-11-30', 'yay', ''),
+('e0001', 'l0005', 'casual', '2018-11-08', '2018-11-15', 'yay', 'Pending'),
+('e0001', 'l0006', 'casual', '2018-11-29', '2018-11-30', 'yay', 'Pending'),
 ('e0001', 'l0007', 'casual', '2018-11-29', '2018-11-30', 'yay', 'Pending'),
 ('e0001', 'l0008', 'annual', '2018-11-28', '2018-11-30', 'sick', 'Pending'),
-('e1236', 'l0009', 'maturity', '2020-05-11', '2020-05-11', 'd', 'Pending');
+('e1236', 'l0009', 'maturity', '8999-11-30', '8999-11-30', 'd', 'Pending'),
+('e1236', 'l0010', 'maturity', '2018-11-29', '2018-12-31', 'g', 'Pending');
 
 --
 -- Triggers `leavesubmissions`
@@ -502,13 +532,29 @@ DELIMITER $$
 CREATE TRIGGER `checkday` BEFORE INSERT ON `leavesubmissions` FOR EACH ROW BEGIN 
 DECLARE TEMPKODE VARCHAR(5);
 
+DECLARE Datedifference INT;
+
+DECLARE nopayd INT;
+
+DECLARE annuald INT;
+
+DECLARE casuald INT;
+
+DECLARE maturityd INT;
+
+select annual into annuald from leaveleft where eid=new.eid;
+select casual into casuald from leaveleft where eid=new.eid;
+select maturity into maturityd from leaveleft where eid=new.eid;
+select nopay into nopayd from leaveleft where eid=new.eid;
+select datediff(new.enddate , new.date) into Datedifference;
+
 select CONCAT('l',LPAD(CAST(substring_index(leaveid,'l',-1) as unsigned)+1,4,'0')) into TEMPKODE from leavesubmissions order by leaveid desc limit 1 ;
 
 SET NEW.LEAVEID := TEMPKODE;
 
 if (new.eid = ''  or new.type=''  or new.date=''  or new.enddate='' or new.reason = '' or new.status='') THEN
 	signal SQLSTATE '12345'
-    	set MESSAGE_TEXT='Please fill out the form completly';
+    	set MESSAGE_TEXT='Fill out form';
 end if;
 
 if (new.status != 'Pending') THEN
@@ -518,7 +564,7 @@ end if;
 
 IF (new.date < date(now())) THEN 
     signal sqlstate '12345'
-    set MESSAGE_TEXT ='starting day after today';
+    set MESSAGE_TEXT ='starting day before today';
 
 END IF; 
 
@@ -528,34 +574,61 @@ IF (new.date > new.enddate) THEN
 
 END IF; 
 
+
+
 if (new.type = 'nopay') THEN 	
-	if(select nopay from leaveleft where eid=new.eid ) = 0 THEN     			SIGNAL SQLSTATE '12345'          
+	if(nopayd-Datedifference) < 0 THEN     			SIGNAL SQLSTATE '12345'          
     	SET MESSAGE_TEXT = 'You have no nopay leaves remaning';     	ELSE     	
-        update leaveleft set nopay=nopay-1 where eid=new.eid;     	end if; 
+        update leaveleft set nopay=nopay-Datedifference where eid=new.eid;     	end if; 
 end if;
 
 if (new.type = 'maturity') THEN 	
-	if(select maturity from leaveleft where eid=new.eid) = 0 THEN     			SIGNAL SQLSTATE '12345'          
+	if(maturityd-Datedifference) < 0 THEN     			SIGNAL SQLSTATE '12345'          
     	SET MESSAGE_TEXT = 'You have no maternity leaves remaning';     	ELSE     	
-        update leaveleft set maturity=maturity-1 where eid=new.eid;     	end if; 
+        update leaveleft set maturity=maturity-Datedifference where eid=new.eid;     	end if; 
 end if;
 
 if (new.type = 'casual') THEN 	
-	if(select casual from leaveleft where eid=new.eid)=0 THEN     			SIGNAL SQLSTATE '12345'          
+	if(casuald-Datedifference)<0 THEN     			SIGNAL SQLSTATE '12345'          
     	SET MESSAGE_TEXT = 'You have no casual leaves remaning';     	ELSE     	
-        update leaveleft set casual=casual-1 where eid=new.eid;     	end if; 
+        update leaveleft set casual=casual-Datedifference where eid=new.eid;     	end if; 
 end if;
 
 if (new.type = 'annual') THEN 	
-	if(select annual from leaveleft where eid=new.eid)=0 THEN     			SIGNAL SQLSTATE '12345'          
+	if(annuald - Datedifference)<=0 THEN     			SIGNAL SQLSTATE '12345'          
     	SET MESSAGE_TEXT = 'You have no annual leaves remaning';     	ELSE     	
-        update leaveleft set annual=annual-1 where eid=new.eid;
+        update leaveleft set annual=annual-Datedifference where eid=new.eid;
         
         end if; 
 end if;
 
 
 END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `resetrejected` BEFORE UPDATE ON `leavesubmissions` FOR EACH ROW BEGIN
+
+DECLARE Datediff INT;
+
+select datediff(new.enddate , new.date) into Datediff;
+
+if (new.type = 'nopay') THEN 	
+	 update leaveleft set annual=annual+Datediff where eid=new.eid;
+end if;
+
+if (new.type = 'maturity') THEN 	
+	update leaveleft set maturity=maturity+Datediff where eid=new.eid;
+end if;
+
+if (new.type = 'casual') THEN 	
+	update leaveleft set casual=casual+Datediff where eid=new.eid;
+end if;
+
+if (new.type = 'annual') THEN 	
+	update leaveleft set annual=annual+Datediff where eid=new.eid;
+end if;
+end
 $$
 DELIMITER ;
 
@@ -582,7 +655,8 @@ INSERT INTO `paygrade` (`pgid`, `salary`, `casual`, `nopay`, `annual`, `maturity
 ('pg0000', '0.00', 0, 0, 0, 50),
 ('pg0001', '0.00', 0, 0, 0, 50),
 ('pg0002', '5000000.00', 18, 6, 9, 2),
-('pg0003', '3000000.00', 15, 7, 10, 6);
+('pg0003', '3000000.00', 15, 7, 10, 6),
+('pg0004', '1000000.00', 100, 5, 1, 50);
 
 --
 -- Triggers `paygrade`
@@ -622,22 +696,29 @@ CREATE TABLE `useraccount` (
 --
 
 INSERT INTO `useraccount` (`eid`, `password`) VALUES
-('e0001', 'temporary'),
-('e0002', 'temporary2'),
-('e0003', 'temporary3'),
-('e0004', 'ranikz'),
-('e0005', 'hi'),
-('e1236', 'temp');
+('e0001', 'dcdc8b2d0a7955131b67e56602873f6384102669'),
+('e0002', 'bbe8b6712120c9548a9da94769a7a71c67658d3e'),
+('e0003', 'd969831eb8a99cff8c02e681f43289e5d3d69664'),
+('e0004', 'd969831eb8a99cff8c02e681f43289e5d3d69664'),
+('e0005', 'd969831eb8a99cff8c02e681f43289e5d3d69664'),
+('e0006', 'd969831eb8a99cff8c02e681f43289e5d3d69664'),
+('e1235', 'f7a15fe720c16e86cad881bfed98246a6bcc70eb'),
+('e1236', 'bbe8b6712120c9548a9da94769a7a71c67658d3e');
 
 --
 -- Triggers `useraccount`
 --
 DELIMITER $$
 CREATE TRIGGER `checkf` BEFORE INSERT ON `useraccount` FOR EACH ROW begin
+
+DECLARE newhash VARCHAR(255);
+SET newhash = sha1(new.password);
+SET new.password = newhash;
 if (new.eid = '') THEN
 	signal SQLSTATE '12345'
     	set MESSAGE_TEXT='Please fill out the form completly';
 end if;
+
 end
 $$
 DELIMITER ;
@@ -750,7 +831,8 @@ ALTER TABLE `leaveleft`
 --
 ALTER TABLE `leavesubmissions`
   ADD PRIMARY KEY (`leaveid`),
-  ADD KEY `eid` (`eid`);
+  ADD KEY `eid` (`eid`),
+  ADD KEY `status` (`status`);
 
 --
 -- Indexes for table `paygrade`

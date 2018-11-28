@@ -15,6 +15,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,7 +57,7 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnaddHR.setBounds(10, 225, 89, 23);
+		btnaddHR.setBounds(10, 225, 100, 48);
 		contentPane.add(btnaddHR);
 		
 		JButton btnNewButton_1 = new JButton("Add new Paygrade");
@@ -68,7 +69,7 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnNewButton_1.setBounds(120, 216, 132, 41);
+		btnNewButton_1.setBounds(120, 225, 150, 48);
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Add Dept");
@@ -79,7 +80,7 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnNewButton_2.setBounds(262, 216, 101, 41);
+		btnNewButton_2.setBounds(10, 284, 101, 48);
 		contentPane.add(btnNewButton_2);
 		
 		JButton btnNewButton = new JButton("Add Branch");
@@ -90,7 +91,7 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(373, 216, 101, 41);
+		btnNewButton.setBounds(280, 155, 109, 48);
 		contentPane.add(btnNewButton);
 		
 		JButton btnAddRole = new JButton("Add role");
@@ -101,7 +102,7 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnAddRole.setBounds(10, 148, 89, 23);
+		btnAddRole.setBounds(10, 155, 100, 48);
 		contentPane.add(btnAddRole);
 		
 		JButton btnGenerateReport = new JButton("generate Report");
@@ -112,7 +113,7 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnGenerateReport.setBounds(120, 148, 150, 23);
+		btnGenerateReport.setBounds(120, 155, 150, 48);
 		contentPane.add(btnGenerateReport);
 		
 		JButton btnAddNewColumn = new JButton("Add New Column");
@@ -123,42 +124,40 @@ public class adminload extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnAddNewColumn.setBounds(292, 148, 121, 41);
+		btnAddNewColumn.setBounds(120, 284, 150, 48);
 		contentPane.add(btnAddNewColumn);
 		
 		JButton btnLogout = new JButton("Logout");
-		btnLogout.setBounds(453, 24, 89, 23);
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loginpage.createLoginpage().clearConnecton();
+				loginpage form = loginpage.createLoginpage();
+				form.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				form.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnLogout.setBounds(450, 200, 89, 73);
 		contentPane.add(btnLogout);
 		
 		//Import from here for supervisor
 		
-		final Connection c = loginpage.createLoginpage().getConnection();
-		PreparedStatement p;
-		try {
-			p = c.prepareStatement("SELECT count(eid) FROM `employeedetails` WHERE supervisorid=?");
-			p.setString(1, loginpage.geteid());
-			ResultSet rs = p.executeQuery();
-			
-			if(rs.next()) {
-				int d = rs.getInt(1);
-				if(true) {
-					JButton btnSupervisor = new JButton("Supervisor");
-					btnSupervisor.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
-							Managerhome form = new Managerhome();
-							form.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-							form.setVisible(true);
-						}
-					});
-					
-					btnSupervisor.setBounds(30, 36, 89, 23);
-					contentPane.add(btnSupervisor);
-				}
+		if(true) {
+			if(true) {
+				JButton btnSupervisor = new JButton("Supervisor");
+				btnSupervisor.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Managerhome form = new Managerhome();
+						form.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+						form.setVisible(true);
+					}
+				});
+				
+				btnSupervisor.setBounds(30, 36, 89, 23);
+				contentPane.add(btnSupervisor);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
 		
 
 	}

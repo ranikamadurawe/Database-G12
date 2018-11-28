@@ -90,6 +90,8 @@ public class AddAdditional extends JFrame {
 			table_1 = new JTable();
 			scrollPane.setViewportView(table_1);
 			table_1.setModel(DbUtils.resultSetToTableModel(rs));
+			p.close();
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e);
@@ -128,7 +130,9 @@ public class AddAdditional extends JFrame {
 											ps.setInt(i+1, Integer.valueOf(table_1.getModel().getValueAt(j-1, i+2).toString()));	
 									}else if(columnDatatype.get(i)==91) {
 										String chosenbday = (String)table_1.getModel().getValueAt(j-1, i+2);
-										java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(chosenbday);
+										SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+										format.setLenient(false);
+										java.util.Date utilDate = format.parse(chosenbday);
 										Date sqlDate = new Date(utilDate.getTime());
 										ps.setDate(i+1, sqlDate);
 									}else if(columnDatatype.get(i)==3) {
@@ -145,6 +149,7 @@ public class AddAdditional extends JFrame {
 								ps.executeUpdate();
 							}
 						}
+						ps.close();
 					} catch (SQLException e) {
 						JOptionPane.showMessageDialog(null, "Error "+e);
 						e.printStackTrace();

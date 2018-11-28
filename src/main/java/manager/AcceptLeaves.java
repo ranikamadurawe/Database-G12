@@ -36,6 +36,8 @@ public class AcceptLeaves extends javax.swing.JFrame {
         		PreparedStatement p = c.prepareStatement("select eid,leaveid,type,date,enddate,reason,status,name from (select eid,leaveid,type,date,enddate,reason,leavesubmissions.status from leavesubmissions left join employeedetails using(eid) where (supervisorid=? or supervisorid is null) and leavesubmissions.status='Pending') as t1 join employeepersonal using(eid)");
         		p.setString(1, loginpage.eid);
         		ResultSet s = p.executeQuery();
+
+        		
         		return s;
         	} catch (SQLException e) {
         		JOptionPane.showMessageDialog(null, "No new Submissions");
@@ -48,6 +50,7 @@ public class AcceptLeaves extends javax.swing.JFrame {
         		PreparedStatement p = c.prepareStatement("select eid,leaveid,type,date,enddate,reason,status,name from (select eid,leaveid,type,date,enddate,reason,leavesubmissions.status from leavesubmissions left join employeedetails using(eid) where (supervisorid=?) and leavesubmissions.status='Pending') as t1 join employeepersonal using(eid)");
         		p.setString(1, loginpage.eid);
         		ResultSet s = p.executeQuery();
+
         		return s;
         	} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -142,6 +145,7 @@ public class AcceptLeaves extends javax.swing.JFrame {
 					PreparedStatement s1 = c.prepareStatement("update leavesubmissions set status='Rejected' where leaveid=?");
 					s1.setString(1, s.getString(2));
 					s1.executeUpdate();
+					s1.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -155,6 +159,7 @@ public class AcceptLeaves extends javax.swing.JFrame {
 					PreparedStatement s1 = c.prepareStatement("update leavesubmissions set status='Accepted' where leaveid=?");
 					s1.setString(1, s.getString(2));
 					s1.executeUpdate();
+					s1.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

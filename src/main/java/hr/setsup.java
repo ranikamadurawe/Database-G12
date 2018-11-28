@@ -159,6 +159,7 @@ public class setsup {
 		        tableEditor.setEditor(combo, items[i], 2);
 		        items[i].setData("selection", combo);
 			}
+			rs.close();
 			
 			
 		}catch(Exception e){

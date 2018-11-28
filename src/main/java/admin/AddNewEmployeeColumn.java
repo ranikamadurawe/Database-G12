@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import logindetails.loginpage;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -36,6 +37,7 @@ public class AddNewEmployeeColumn extends JFrame {
 				try {
 					AddNewEmployeeColumn frame = new AddNewEmployeeColumn();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -55,7 +57,7 @@ public class AddNewEmployeeColumn extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("ColumnName");
-		lblNewLabel.setBounds(82, 52, 46, 14);
+		lblNewLabel.setBounds(82, 52, 86, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblType = new JLabel("Type");
@@ -93,8 +95,10 @@ public class AddNewEmployeeColumn extends JFrame {
 						ps = c.prepareStatement("alter table `employeeadditional` add `"+textField.getText()+"` VARCHAR(50)");
 					}
 					ps.executeUpdate();
+					ps.close();
+					JOptionPane.showMessageDialog(null, "Successfully Updated");
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e);
 					e.printStackTrace();
 				}
 				

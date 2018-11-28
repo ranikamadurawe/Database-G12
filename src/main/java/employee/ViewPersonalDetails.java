@@ -43,74 +43,74 @@ public class ViewPersonalDetails extends JFrame {
         
        
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 449, 487);
 		variable = new JPanel();
 		variable.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(variable);
 		variable.setLayout(null);
 		
 		JLabel eid = new JLabel("New label");
-		eid.setBounds(139, 25, 46, 14);
+		eid.setBounds(169, 25, 204, 14);
 		variable.add(eid);
 		
 		JLabel employeename = new JLabel("New label");
-		employeename.setBounds(139, 52, 46, 14);
+		employeename.setBounds(169, 50, 204, 14);
 		variable.add(employeename);
 		
 		JLabel nic = new JLabel("New label");
-		nic.setBounds(139, 77, 46, 14);
+		nic.setBounds(169, 75, 204, 14);
 		variable.add(nic);
 		
 		JLabel nationality = new JLabel("New label");
-		nationality.setBounds(139, 103, 46, 14);
+		nationality.setBounds(169, 100, 204, 14);
 		variable.add(nationality);
 		
 		JLabel maritalstatus = new JLabel("New label");
-		maritalstatus.setBounds(139, 128, 46, 14);
+		maritalstatus.setBounds(169, 125, 204, 14);
 		variable.add(maritalstatus);
 		
 		JLabel birthdate = new JLabel("New label");
-		birthdate.setBounds(139, 156, 46, 14);
+		birthdate.setBounds(169, 150, 204, 14);
 		variable.add(birthdate);
 		
 		JLabel address = new JLabel("New label");
-		address.setBounds(125, 184, 34, 7);
+		address.setBounds(169, 175, 204, 14);
 		variable.add(address);
 		
 		JLabel email = new JLabel("New label");
-		email.setBounds(139, 200, 46, 14);
+		email.setBounds(169, 200, 204, 14);
 		variable.add(email);
 		
 		JLabel status = new JLabel("New label");
-		status.setBounds(295, 25, 46, 14);
+		status.setBounds(169, 275, 212, 14);
 		variable.add(status);
 		
 		JLabel title = new JLabel("New label");
-		title.setBounds(295, 52, 46, 14);
+		title.setBounds(169, 325, 204, 14);
 		variable.add(title);
 		
 		JLabel supname = new JLabel("New label");
-		supname.setBounds(295, 89, 46, 14);
+		supname.setBounds(169, 300, 204, 14);
 		variable.add(supname);
 		
 		JLabel supid = new JLabel("New label");
-		supid.setBounds(295, 128, 46, 14);
+		supid.setBounds(169, 375, 204, 14);
 		variable.add(supid);
 		
 		JLabel deptname = new JLabel("New label");
-		deptname.setBounds(295, 156, 46, 14);
+		deptname.setBounds(169, 250, 204, 14);
 		variable.add(deptname);
 		
 		JLabel building = new JLabel("New label");
-		building.setBounds(295, 184, 46, 14);
+		building.setBounds(169, 350, 204, 14);
 		variable.add(building);
 		
 		JLabel officename = new JLabel("New label");
-		officename.setBounds(295, 216, 46, 14);
+		officename.setBounds(169, 225, 204, 14);
 		variable.add(officename);
 		
 		JLabel officeaddress = new JLabel("New label");
-		officeaddress.setBounds(295, 236, 46, 14);
+		officeaddress.setBounds(169, 400, 212, 14);
 		variable.add(officeaddress);
 		
 		 try {
@@ -134,6 +134,70 @@ public class ViewPersonalDetails extends JFrame {
 				building.setText(r.getString(16));
 				officename.setText(r.getString(17));
 				officeaddress.setText(r.getString(18));
+				
+				JLabel lblEid = new JLabel("EID");
+				lblEid.setBounds(29, 25, 46, 14);
+				variable.add(lblEid);
+				
+				JLabel lblEmployeeName = new JLabel("Employee Name");
+				lblEmployeeName.setBounds(29, 50, 82, 14);
+				variable.add(lblEmployeeName);
+				
+				JLabel lblNic = new JLabel("NIC");
+				lblNic.setBounds(29, 75, 46, 14);
+				variable.add(lblNic);
+				
+				JLabel lblNationality = new JLabel("Nationality");
+				lblNationality.setBounds(29, 100, 67, 14);
+				variable.add(lblNationality);
+				
+				JLabel lblNewLabel = new JLabel("Marital status");
+				lblNewLabel.setBounds(29, 125, 71, 14);
+				variable.add(lblNewLabel);
+				
+				JLabel lblNewLabel_1 = new JLabel("Birthday");
+				lblNewLabel_1.setBounds(29, 150, 46, 14);
+				variable.add(lblNewLabel_1);
+				
+				JLabel lblAddress = new JLabel("Address");
+				lblAddress.setBounds(29, 175, 46, 14);
+				variable.add(lblAddress);
+				
+				JLabel lblEmail = new JLabel("Email");
+				lblEmail.setBounds(29, 200, 46, 14);
+				variable.add(lblEmail);
+				
+				JLabel lblOfficeName = new JLabel("Office name");
+				lblOfficeName.setBounds(29, 225, 67, 14);
+				variable.add(lblOfficeName);
+				
+				JLabel lblDepartmentName = new JLabel("Department name");
+				lblDepartmentName.setBounds(29, 250, 93, 14);
+				variable.add(lblDepartmentName);
+				
+				JLabel lblStatus = new JLabel("Status");
+				lblStatus.setBounds(29, 275, 46, 14);
+				variable.add(lblStatus);
+				
+				JLabel lblSupervisorName = new JLabel("Supervisor name");
+				lblSupervisorName.setBounds(31, 300, 80, 14);
+				variable.add(lblSupervisorName);
+				
+				JLabel lblTitle = new JLabel("Title");
+				lblTitle.setBounds(29, 325, 46, 14);
+				variable.add(lblTitle);
+				
+				JLabel lblBuilding = new JLabel("Building");
+				lblBuilding.setBounds(29, 350, 46, 14);
+				variable.add(lblBuilding);
+				
+				JLabel lblSupervisorId = new JLabel("Supervisor ID");
+				lblSupervisorId.setBounds(29, 375, 82, 14);
+				variable.add(lblSupervisorId);
+				
+				JLabel lblOfficeAddress = new JLabel("Office address");
+				lblOfficeAddress.setBounds(31, 400, 80, 14);
+				variable.add(lblOfficeAddress);
 				
 	        } catch (SQLException e) {
 				// TODO Auto-generated catch block

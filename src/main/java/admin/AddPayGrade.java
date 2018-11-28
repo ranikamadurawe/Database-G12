@@ -69,6 +69,7 @@ public class AddPayGrade extends JFrame {
 			}else {
 				next = "pg"+nextid;
 			}
+			rs.close();
 			return next;	
 		}catch(SQLException e) {
 			
@@ -180,7 +181,8 @@ public class AddPayGrade extends JFrame {
 						JOptionPane.showMessageDialog(null, "Add Successful");
 						setVisible(false);
 					}
-					
+					p.close();
+					rs.close();
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null, "Error when adding data"+e);
 					e.printStackTrace();

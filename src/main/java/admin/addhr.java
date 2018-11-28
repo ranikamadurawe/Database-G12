@@ -107,7 +107,7 @@ public class addhr extends JFrame {
 		
 		JButton btnSubmit = new JButton("Submit");
 	
-		btnSubmit.setBounds(184, 479, 89, 23);
+		btnSubmit.setBounds(114, 479, 89, 23);
 		contentPane.add(btnSubmit);
 		
 		deptNames = new JComboBox();
@@ -115,23 +115,23 @@ public class addhr extends JFrame {
 		contentPane.add(deptNames);
 		
 		JLabel lblEid = new JLabel("eid");
-		lblEid.setBounds(184, 33, 46, 14);
+		lblEid.setBounds(97, 33, 46, 14);
 		contentPane.add(lblEid);
 		
 		JLabel lblName = new JLabel("name");
-		lblName.setBounds(184, 64, 46, 14);
+		lblName.setBounds(97, 64, 46, 14);
 		contentPane.add(lblName);
 		
 		JLabel lblNationality = new JLabel("nationality");
-		lblNationality.setBounds(184, 95, 73, 14);
+		lblNationality.setBounds(97, 95, 73, 14);
 		contentPane.add(lblNationality);
 		
 		JLabel lblNic = new JLabel("nic");
-		lblNic.setBounds(184, 131, 46, 14);
+		lblNic.setBounds(97, 131, 46, 14);
 		contentPane.add(lblNic);
 		
 		JLabel lblMaritialStatus = new JLabel("maritial status");
-		lblMaritialStatus.setBounds(184, 163, 46, 14);
+		lblMaritialStatus.setBounds(97, 163, 73, 14);
 		contentPane.add(lblMaritialStatus);
 		
 		JLabel lblAddress = new JLabel("address");
@@ -139,7 +139,7 @@ public class addhr extends JFrame {
 		contentPane.add(lblAddress);
 		
 		JLabel lblDept = new JLabel("dept");
-		lblDept.setBounds(111, 259, 46, 14);
+		lblDept.setBounds(97, 259, 46, 14);
 		contentPane.add(lblDept);
 		
 		phone = new JTextField();
@@ -161,27 +161,27 @@ public class addhr extends JFrame {
 		email.setColumns(10);
 		
 		final JSpinner year = new JSpinner();
-		year.setBounds(97, 409, 30, 20);
+		year.setBounds(97, 445, 66, 20);
 		contentPane.add(year);
 		
 		final JSpinner month = new JSpinner();
-		month.setBounds(199, 409, 30, 20);
+		month.setBounds(229, 445, 46, 20);
 		contentPane.add(month);
 		
 		final JSpinner date = new JSpinner();
-		date.setBounds(308, 409, 30, 20);
+		date.setBounds(341, 445, 53, 20);
 		contentPane.add(date);
 		
 		JLabel lblNewLabel = new JLabel("Year");
-		lblNewLabel.setBounds(41, 412, 46, 14);
+		lblNewLabel.setBounds(53, 448, 46, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Month");
-		lblNewLabel_1.setBounds(143, 412, 46, 14);
+		lblNewLabel_1.setBounds(173, 445, 46, 14);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Date");
-		lblNewLabel_2.setBounds(252, 412, 46, 14);
+		lblNewLabel_2.setBounds(285, 448, 46, 14);
 		contentPane.add(lblNewLabel_2);
 		
 		final JSpinner epfspin = new JSpinner();
@@ -191,6 +191,7 @@ public class addhr extends JFrame {
 		JLabel lblEpfPercentage = new JLabel("epf percentage");
 		lblEpfPercentage.setBounds(97, 381, 108, 14);
 		contentPane.add(lblEpfPercentage);
+		
 		
 		
 		try {
@@ -211,8 +212,12 @@ public class addhr extends JFrame {
 					eid.setText(loadlatestid());
 				}
 			});
-			btnLoadLatest.setBounds(283, 479, 89, 23);
+			btnLoadLatest.setBounds(230, 479, 89, 23);
 			contentPane.add(btnLoadLatest);
+			
+			JLabel lblBirthday = new JLabel("Birthday");
+			lblBirthday.setBounds(43, 415, 46, 14);
+			contentPane.add(lblBirthday);
 		}catch(Exception e) {
 			
 		}
@@ -227,7 +232,7 @@ public class addhr extends JFrame {
 					PreparedStatement ps = c.prepareStatement("select deptid from department where name = ?");
 					ps.setString(1, deptNames.getSelectedItem().toString());
 					ResultSet rs = ps.executeQuery();
-					
+		
 					while(rs.next()) {
 						String deptid = rs.getString(1);
 						c.setAutoCommit(false);
@@ -237,8 +242,10 @@ public class addhr extends JFrame {
 						p1.setString(3,"permanent");
 						p1.setString(4,"hr");
 						
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						format.setLenient(false);
 						String chosenbday = (Integer)year.getValue()+"-"+(Integer)month.getValue()+"-"+(Integer)date.getValue();
-						java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(chosenbday);
+						java.util.Date utilDate = format.parse(chosenbday);
 						Date sqlDate = new Date(utilDate.getTime());
 						
 						PreparedStatement p2 = c.prepareStatement("insert into employeepersonal(eid,name,nic,nationality,maritalstatus,address,email,birthdate) values (?,?,?,?,?,?,?,?)");
@@ -290,6 +297,15 @@ public class addhr extends JFrame {
 						added = true;
 						JOptionPane.showMessageDialog(null, "Add Successful");
 						setVisible(false);
+						ps.close();
+						rs.close();
+						p1.close();
+						p2.close();
+						p3.close();
+						p4.close();
+						p5.close();
+						p6.close();
+						p7.close();
 					}
 				}catch(Exception e) {
 					try {

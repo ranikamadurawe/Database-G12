@@ -22,6 +22,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class Managerhome extends JFrame {
 
@@ -77,7 +79,7 @@ public class Managerhome extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnNewButton_2.setBounds(116, 109, 138, 23);
+		btnNewButton_2.setBounds(136, 177, 138, 23);
 		contentPane.add(btnNewButton_2);
 		
 		JButton btnNewButton_3 = new JButton("Accept Leaves");
@@ -93,7 +95,7 @@ public class Managerhome extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnNewButton_3.setBounds(34, 48, 136, 23);
+		btnNewButton_3.setBounds(138, 104, 136, 23);
 		contentPane.add(btnNewButton_3);
 		
 		JButton btnNewButton_4 = new JButton("Update Employee");
@@ -110,7 +112,12 @@ public class Managerhome extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnNewButton_4.setBounds(185, 48, 136, 23);
+		btnNewButton_4.setBounds(136, 138, 136, 23);
 		contentPane.add(btnNewButton_4);
+		
+		JLabel lblManagerView = new JLabel("Manager View");
+		lblManagerView.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblManagerView.setBounds(184, 30, 138, 40);
+		contentPane.add(lblManagerView);
 	}
 }

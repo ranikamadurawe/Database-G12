@@ -25,6 +25,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class EmployeeHome extends JFrame {
 
@@ -108,6 +110,24 @@ public class EmployeeHome extends JFrame {
 		btnNewButton_5.setBounds(34, 82, 136, 23);
 		contentPane.add(btnNewButton_5);
 		
+		JButton btnLogOut = new JButton("Log Out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loginpage.createLoginpage().clearConnecton();
+				loginpage form = loginpage.createLoginpage();
+				form.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				form.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnLogOut.setBounds(134, 188, 89, 23);
+		contentPane.add(btnLogOut);
+		
+		JLabel lblEmployeeHome = new JLabel("Employee Home");
+		lblEmployeeHome.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblEmployeeHome.setBounds(251, 26, 138, 23);
+		contentPane.add(lblEmployeeHome);
+		
 		final Connection c = loginpage.createLoginpage().getConnection();
 		PreparedStatement p;
 		try {
@@ -131,6 +151,8 @@ public class EmployeeHome extends JFrame {
 					contentPane.add(btnSupervisor);
 				}
 			}
+			p.close();
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

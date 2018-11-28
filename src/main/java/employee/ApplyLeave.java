@@ -51,18 +51,6 @@ public class ApplyLeave extends javax.swing.JFrame {
         final Connection c = loginpage.createLoginpage().getConnection();
           
         Calendar cal = Calendar.getInstance();
-        jSpinner1.setValue(Integer.valueOf(cal.get(Calendar.YEAR)));
-        JSpinner.NumberEditor editor = new JSpinner.NumberEditor( jSpinner1, "#" );
-        jSpinner1.setEditor( editor );
-        jSpinner3.setValue(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)+1));
-        jSpinner2.setValue(Integer.valueOf(cal.get(Calendar.MONTH)));
-
-        
-        jSpinner7.setValue(Integer.valueOf(cal.get(Calendar.YEAR)));
-        JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor( jSpinner7, "#" );
-        jSpinner7.setEditor( editor2 );
-        jSpinner9.setValue(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)+1));
-        jSpinner8.setValue(Integer.valueOf(cal.get(Calendar.MONTH)));
 
         
     }
@@ -112,7 +100,7 @@ public class ApplyLeave extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setText("Leave Type");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Annual", "Casual", "Maturity", "No-Pay" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "annual", "casual", "maturity", "nopay" }));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("Reason");
@@ -130,22 +118,30 @@ public class ApplyLeave extends javax.swing.JFrame {
 				try {
 					PreparedStatement p = c.prepareStatement("insert into leavesubmissions(eid,date,enddate,type,reason,status) values(?,?,?,?,?,?)");
 					p.setString(1, loginpage.geteid());
-					String begindate = jSpinner1.getValue()+"-"+jSpinner3.getValue()+"-"+jSpinner2.getValue();
-					String enddate =  jSpinner7.getValue()+"-"+jSpinner9.getValue()+"-"+jSpinner8.getValue();
-					java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(begindate);
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+					format.setLenient(false);
+					String begindate = (Integer)jSpinner1.getValue()+"-"+(Integer)jSpinner2.getValue()+"-"+(Integer)jSpinner3.getValue();
+					String enddate =  (Integer)jSpinner7.getValue()+"-"+(Integer)jSpinner8.getValue()+"-"+(Integer)jSpinner9.getValue();
+					System.out.println(begindate);
+					java.util.Date utilDate = format.parse(begindate);
 					Date sqlDate = new Date(utilDate.getTime());
-					java.util.Date utilDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(enddate);
-					Date sqlDate2 = new Date(utilDate.getTime());
+					java.util.Date utilDate2 = format.parse(enddate);
+					
+					Date sqlDate2 = new Date(utilDate2.getTime());
 					p.setDate(2, sqlDate);
 					p.setDate(3, sqlDate2);
 					p.setString(4, jComboBox1.getSelectedItem().toString());
 					p.setString(5, jTextArea1.getText());
 					p.setString(6, "Pending");
 					p.executeUpdate();
+					JOptionPane.showMessageDialog(null, "Leave form submitted");
+					p.close();
 				} catch ( SQLException e) {
 					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e);
 					e.printStackTrace();
 				} catch (ParseException e) {
+					JOptionPane.showMessageDialog(null, e);
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

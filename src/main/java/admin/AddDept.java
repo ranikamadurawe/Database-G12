@@ -56,7 +56,9 @@ public class AddDept extends JFrame {
 			}else {
 				next = "d"+nextid;
 			}
-			return next;	
+			rs.close();
+			return next;
+			
 		}catch(SQLException e) {
 			
 		}
@@ -121,6 +123,10 @@ public class AddDept extends JFrame {
 		
 		
 		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnSubmit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -139,6 +145,7 @@ public class AddDept extends JFrame {
 						p1.setString(3,building.getText());
 						p1.setString(4,deptname.getText());
 						p1.executeUpdate();
+						p1.close();
 						JOptionPane.showMessageDialog(null, "Add Successful");
 						setVisible(false);
 					}
@@ -149,7 +156,7 @@ public class AddDept extends JFrame {
 				
 			}
 		});
-		btnSubmit.setBounds(141, 212, 89, 23);
+		btnSubmit.setBounds(80, 212, 89, 23);
 		contentPane.add(btnSubmit);
 		
 		building = new JTextField();
@@ -167,7 +174,7 @@ public class AddDept extends JFrame {
 				deptID.setText(loadlatestid());	
 			}
 		});
-		btnLoadLastId.setBounds(259, 212, 89, 23);
+		btnLoadLastId.setBounds(192, 212, 89, 23);
 		contentPane.add(btnLoadLastId);
 		
 		try {

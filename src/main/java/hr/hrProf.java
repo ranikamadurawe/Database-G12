@@ -16,10 +16,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class hrProf extends JFrame {
 
@@ -40,7 +43,7 @@ public class hrProf extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnOpenTable = new JButton("Open Table");
+		JButton btnOpenTable = new JButton("Set Supervisors");
 		btnOpenTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -48,7 +51,7 @@ public class hrProf extends JFrame {
 				setsup1.open();
 			}
 		});
-		btnOpenTable.setBounds(153, 177, 89, 23);
+		btnOpenTable.setBounds(128, 153, 154, 23);
 		contentPane.add(btnOpenTable);
 		
 		JButton btnAddEmployee = new JButton("Add employee");
@@ -59,19 +62,39 @@ public class hrProf extends JFrame {
 				form.setVisible(true);
 			}
 		});
-		btnAddEmployee.setBounds(153, 108, 154, 23);
+		btnAddEmployee.setBounds(128, 107, 154, 23);
 		contentPane.add(btnAddEmployee);
+		
+		JLabel lblHrHome = new JLabel("HR Home");
+		lblHrHome.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblHrHome.setBounds(251, 33, 75, 32);
+		contentPane.add(lblHrHome);
+		
+		JButton btnNewButton = new JButton("Log out");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loginpage.createLoginpage().clearConnecton();
+				loginpage form = loginpage.createLoginpage();
+				form.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				form.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnNewButton.setBounds(128, 198, 154, 23);
+		contentPane.add(btnNewButton);
 		
 		final Connection c = loginpage.createLoginpage().getConnection();
 		PreparedStatement p;
 		try {
-			p = c.prepareStatement("SELECT count(eid) FROM `employeedetails` WHERE supervisorid=?");
-			p.setString(1, loginpage.geteid());
-			ResultSet rs = p.executeQuery();
+			CallableStatement cstmt = c.prepareCall("{? = call getsup(?)}");
+			cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
+			cstmt.setString(2, loginpage.geteid());
+			cstmt.execute();
 			
-			if(rs.next()) {
-				int d = rs.getInt(1);
-				if(d>0) {
+			
+			
+			if(cstmt.getInt(1)>0) {
+				if(true) {
 					JButton btnSupervisor = new JButton("Supervisor");
 					btnSupervisor.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {

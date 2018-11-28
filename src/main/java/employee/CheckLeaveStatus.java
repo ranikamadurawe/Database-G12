@@ -53,7 +53,10 @@ public class CheckLeaveStatus extends javax.swing.JFrame {
 			p.setString(1, loginpage.geteid());
 			System.out.println("x"+loginpage.eid);
 			ResultSet r = p.executeQuery();
+			
 			jTable1.setModel(DbUtils.resultSetToTableModel(r));
+			r.close();
+			p.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

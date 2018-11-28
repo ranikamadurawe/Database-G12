@@ -1,0 +1,75 @@
+BEGIN 
+DECLARE TEMPKODE VARCHAR(5);
+
+DECLARE Datedifference INT;
+
+DECLARE nopayd INT;
+
+DECLARE annuald INT;
+
+DECLARE casuald INT;
+
+DECLARE maturityd INT;
+
+select annual into annuald from leaveleft where eid=new.eid;
+select casual into casuald from leaveleft where eid=new.eid;
+select maturity into maturityd from leaveleft where eid=new.eid;
+select nopay into nopayd from leaveleft where eid=new.eid;
+select datediff(new.enddate , new.date) into Datedifference;
+
+select CONCAT('l',LPAD(CAST(substring_index(leaveid,'l',-1) as unsigned)+1,4,'0')) into TEMPKODE from leavesubmissions order by leaveid desc limit 1 ;
+
+SET NEW.LEAVEID := TEMPKODE;
+
+if (new.eid = ''  or new.type=''  or new.date=''  or new.enddate='' or new.reason = '' or new.status='') THEN
+	signal SQLSTATE '12345'
+    	set MESSAGE_TEXT='Fill out form';
+end if;
+
+if (new.status != 'Pending') THEN
+	signal SQLSTATE '12345'
+    	set MESSAGE_TEXT='a new leave cannot be already accepted';
+end if;
+
+IF (new.date < date(now())) THEN 
+    signal sqlstate '12345'
+    set MESSAGE_TEXT ='starting day before today';
+
+END IF; 
+
+IF (new.date > new.enddate) THEN 
+    signal sqlstate '12345'
+    set MESSAGE_TEXT ='ending day before starting dat=y';
+
+END IF; 
+
+
+
+if (new.type = 'nopay') THEN 	
+	if(nopayd-Datedifference) < 0 THEN     			SIGNAL SQLSTATE '12345'          
+    	SET MESSAGE_TEXT = 'You have no nopay leaves remaning';     	ELSE     	
+        update leaveleft set nopay=nopay-Datedifference where eid=new.eid;     	end if; 
+end if;
+
+if (new.type = 'maturity') THEN 	
+	if(maturityd-Datedifference) < 0 THEN     			SIGNAL SQLSTATE '12345'          
+    	SET MESSAGE_TEXT = 'You have no maternity leaves remaning';     	ELSE     	
+        update leaveleft set maturity=maturity-Datedifference where eid=new.eid;     	end if; 
+end if;
+
+if (new.type = 'casual') THEN 	
+	if(casuald-Datedifference)<0 THEN     			SIGNAL SQLSTATE '12345'          
+    	SET MESSAGE_TEXT = 'You have no casual leaves remaning';     	ELSE     	
+        update leaveleft set casual=casual-Datedifference where eid=new.eid;     	end if; 
+end if;
+
+if (new.type = 'annual') THEN 	
+	if(annuald - Datedifference)<=0 THEN     			SIGNAL SQLSTATE '12345'          
+    	SET MESSAGE_TEXT = 'You have no annual leaves remaning';     	ELSE     	
+        update leaveleft set annual=annual-Datedifference where eid=new.eid;
+        
+        end if; 
+end if;
+
+
+END

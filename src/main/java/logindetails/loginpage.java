@@ -2,7 +2,7 @@ package logindetails;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
+import java.security.MessageDigest;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,8 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
-import java.sql.DriverManager;
+
+import javax.swing.JLabel;
 
 public class loginpage extends JFrame {
 
@@ -51,7 +53,14 @@ public class loginpage extends JFrame {
 	}
 	
 	public void clearConnecton() {
-		this.conn = null;
+		try {
+			this.conn.close();
+			this.conn = null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static loginpage createLoginpage() {
@@ -73,7 +82,7 @@ public class loginpage extends JFrame {
 		contentPane.add(btnLogin);
 		
 		username = new JTextField();
-		username.setBounds(196, 71, 86, 20);
+		username.setBounds(196, 71, 115, 20);
 		contentPane.add(username);
 		username.setColumns(10);
 		
@@ -81,7 +90,7 @@ public class loginpage extends JFrame {
 		password.setBounds(197, 135, 114, 20);
 		contentPane.add(password);
 		
-		JButton btnSignuo = new JButton("Signuo");
+		JButton btnSignuo = new JButton("Signup");
 		btnSignuo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -93,6 +102,14 @@ public class loginpage extends JFrame {
 		btnSignuo.setBounds(236, 192, 89, 23);
 		contentPane.add(btnSignuo);
 		
+		JLabel lblEmployeeId = new JLabel("Employee ID");
+		lblEmployeeId.setBounds(104, 74, 82, 14);
+		contentPane.add(lblEmployeeId);
+		
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setBounds(104, 138, 89, 14);
+		contentPane.add(lblPassword);
+		
 
 		btnLogin.addMouseListener(new MouseAdapter() {
 			@Override
@@ -102,18 +119,24 @@ public class loginpage extends JFrame {
 				String connectionname;
 				String connectionpass;
 				String title;
+				
+				
 				boolean loaded = false;
 				try {
 					System.out.println(usernamegiven);
 					conn = DriverManager.getConnection("jdbc:mysql://localhost/welfare", "loggingin", "okay");
-					PreparedStatement ps = conn.prepareStatement("select password,title from useraccount join employeedetails using(eid) where eid = ?");
+					CallableStatement cstmt = conn.prepareCall("{? = call hashpass(?)}");
+					cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
+					cstmt.setString(2, passwordgiven);
+					cstmt.execute();
+					
+					PreparedStatement ps = conn.prepareStatement("select title from (select eid  from useraccount where eid = ? and password=?) as t2 join employeedetails using(eid) ");
 					ps.setString(1, usernamegiven);
+					ps.setString(2, cstmt.getString(1));
 					ResultSet rs = ps.executeQuery();
 					int count = 0;
 					while(rs.next()) {
-						String pass= rs.getString(1);
-						title = rs.getString(2);
-						if(pass.equals(passwordgiven)) {
+						title = rs.getString(1);
 							PreparedStatement ps2 = conn.prepareStatement("select cuname,cpass from jobtitiles join userroles using(name) where rolename = ?");
 							ps2.setString(1, title);
 							ResultSet rs2 = ps2.executeQuery();
@@ -143,10 +166,10 @@ public class loginpage extends JFrame {
 									role = "employee";
 									loaded = true;
 								}
+								password.setText("");
+								username.setText("");
 							}
-						}else {
-							JOptionPane.showMessageDialog(null, "Incorrect Password or EmployeeID. Make sure to create your account first");
-						}
+						
 						count++;
 					}
 					if(count==0 && !loaded) {
