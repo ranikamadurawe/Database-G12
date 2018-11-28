@@ -110,7 +110,7 @@ public class signup extends JFrame {
 										loadview.setVisible(true);
 										setVisible(false);
 										loginpage.role ="hr";
-									}else if(title.equals("employee")) {
+									}else  {
 										EmployeeHome loadview = new EmployeeHome();
 										loadview.setVisible(true);
 										setVisible(false);

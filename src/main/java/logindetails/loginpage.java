@@ -136,7 +136,7 @@ public class loginpage extends JFrame {
 									setVisible(false);
 									role ="hr";
 									loaded = true;
-								}else if(title.equals("employee")) {
+								}else {
 									EmployeeHome loadview = new EmployeeHome();
 									loadview.setVisible(true);
 									setVisible(false);

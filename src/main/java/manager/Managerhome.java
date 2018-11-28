@@ -13,12 +13,15 @@ import employee.ApplyLeave;
 import employee.CheckLeaveStatus;
 import employee.ViewPersonalDetails;
 import hr.setsup;
+import logindetails.loginpage;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Managerhome extends JFrame {
 
@@ -44,6 +47,15 @@ public class Managerhome extends JFrame {
 	 * Create the frame.
 	 */
 	public Managerhome() {
+		if ( loginpage.getrole().equals("employee")) {
+			loginpage.createLoginpage().conn=null;
+			try {
+				loginpage.createLoginpage().conn = DriverManager.getConnection("jdbc:mysql://localhost/welfare", "manager", "man");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

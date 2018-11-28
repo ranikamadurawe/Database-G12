@@ -51,6 +51,7 @@ public class CheckLeaveStatus extends javax.swing.JFrame {
         try {
 			PreparedStatement p = c.prepareStatement("select * from leavesubmissions where eid = ?");
 			p.setString(1, loginpage.geteid());
+			System.out.println("x"+loginpage.eid);
 			ResultSet r = p.executeQuery();
 			jTable1.setModel(DbUtils.resultSetToTableModel(r));
 		} catch (SQLException e) {
@@ -59,14 +60,7 @@ public class CheckLeaveStatus extends javax.swing.JFrame {
 		}
          
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Start Date", "End Date", "Type", "Reason","Status"
-            }
-        ));
+       
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -1,4 +1,3 @@
-
 package hr;
 
 import java.awt.Dimension;
@@ -20,7 +19,7 @@ import logindetails.loginpage;
 public class AddEmployee extends javax.swing.JFrame {
     
     static AddEmployee ae;
-    Connection c;
+    Connection c = loginpage.createLoginpage().getConnection();
     
     public String loadlatestid() {
     	try {
@@ -56,14 +55,15 @@ public class AddEmployee extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton2);
         jRadioButton1.setSelected(true);
         jTextField1.setText("e");
+        jTextField1.setText(this.loadlatestid());
         
-        c = loginpage.createLoginpage().getConnection();
         
-        try {						//only for check 			/////////////////////////////////**
-			//c =( Connection)DriverManager.getConnection("jdbc:mysql://localhost/welfare", "root", "");
-		}catch(Exception e) {
-			System.out.println("Conn error");
-		}
+        
+//        try {						//only for check 			/////////////////////////////////**
+//			c =( Connection)DriverManager.getConnection("jdbc:mysql://localhost/welfare", "root", "");
+//		}catch(Exception e) {
+//			System.out.println("Conn error");
+//		}
         System.out.println(c);
         
         try{
@@ -83,7 +83,7 @@ public class AddEmployee extends javax.swing.JFrame {
         	queryInit = "select pgid,salary from paygrade";
 			rsInit = sInit.executeQuery(queryInit);
 			while( rsInit.next() ) {
-				jComboBox2.addItem( rsInit.getString(2) );
+				jComboBox2.addItem( rsInit.getString(1) );
 			}
 			rsInit.close();
 			
@@ -353,10 +353,13 @@ public class AddEmployee extends javax.swing.JFrame {
     		if( eid=="" || !((Character)eid.charAt(0)).equals('e') ) {
     			JOptionPane.showMessageDialog(null, "Please enter a valid id");
     			jTextField1.setText("e");
+    			jTextField1.setText(this.loadlatestid());
+    			
     			return;
     		}else if( eid.length() != 5 ) {
     			JOptionPane.showMessageDialog(null, "ID should be 5 characters length");
     			jTextField1.setText("e");
+    			jTextField1.setText(this.loadlatestid());
     			return;
     		}
     		
@@ -370,6 +373,7 @@ public class AddEmployee extends javax.swing.JFrame {
     				if( idrs.getString(1).equals(eid) ) {
     					JOptionPane.showMessageDialog(null, "Id already exists !!!");
     	    			jTextField1.setText("e");
+    					jTextField1.setText(this.loadlatestid());
     	    			return;
     				}
     			}
@@ -382,6 +386,23 @@ public class AddEmployee extends javax.swing.JFrame {
     		}
     		
     		try{
+    			//load leave left
+    			String queryL = "select annual,casual,maturity,nopay from paygrade where pgid='" + payg + "'";
+    			Statement sL = c.createStatement();
+    			ResultSet rsL = sL.executeQuery(queryL);
+    			rsL.next();
+    			int annual = Integer.valueOf(rsL.getString(1));
+    			int casual = Integer.valueOf(rsL.getString(2));
+    			int maturity = Integer.valueOf(rsL.getString(3));
+    			int nopay = Integer.valueOf(rsL.getString(4));
+    			rsL.close();
+    			sL.close();
+    			
+    			System.out.println("annual = " + annual);
+    			System.out.println("cassual = " + casual);
+    			System.out.println("mat = " + maturity);
+    			System.out.println("nopay = " + nopay);
+    			
     			c.setAutoCommit(false);
     			
     			String query1 = "INSERT INTO employeedetails(eid,deptid,status,title) VALUES("
@@ -394,8 +415,7 @@ public class AddEmployee extends javax.swing.JFrame {
     					+ "'" + eid + "','" + name + "','" + nic + "','" + nation + "','" + marital + "','" + address + "','" + email + "')";
     			
     			String query3 = "INSERT INTO emppay(eid,epid,epf) VALUES("
-    					+ "'" + eid + "',"
-    					+ "(select pgid from paygrade where salary=" + payg + "),150)";		//epf should set	/////////**
+    					+ "'" + eid + "','" + payg + "',10)";		//epf ****
     			
     			String query5 = "INSERT INTO empcontact values";
     			for(int i=0; i<phones.length; i++) {
@@ -405,20 +425,36 @@ public class AddEmployee extends javax.swing.JFrame {
     			}
     			query5 = query5.substring(0, query5.lastIndexOf(","));
     			
+    			PreparedStatement p7 = c.prepareStatement("insert into leaveleft(eid,annual,casual,maturity,nopay) values(?,?,?,?,?)");
+				p7.setString(1, eid);
+				p7.setInt(2, annual);
+				p7.setInt(3, casual);
+				p7.setInt(4, maturity);
+				p7.setInt(5, nopay);
+    			
     			PreparedStatement p = c.prepareStatement("insert into employeeadditional(eid) values(?)");
     			p.setString(1, eid);
     			
     			Statement s = c.createStatement();
     			s.executeUpdate(query1);
+    			System.out.println("s");
     			s.executeUpdate(query2);
+    			System.out.println("ss");
     			s.executeUpdate(query3);
+    			System.out.println("sss");
     			p.executeUpdate();
+    			System.out.println("ssss");
     			s.executeUpdate(query5);
+    			System.out.println("sssss");
+    			p7.executeUpdate();
+    			System.out.println("ssssss");
     			
     			c.commit();
+    			    			
     			JOptionPane.showMessageDialog(null, "Successfully Added");
     			
     			jTextField1.setText("e");
+    			jTextField1.setText(this.loadlatestid());
     			jTextField2.setText("");
     			jTextField3.setText("");
     			jTextField4.setText("");
@@ -434,7 +470,7 @@ public class AddEmployee extends javax.swing.JFrame {
     				System.out.println("Rollback error :" + e1);
     			}
     			System.out.println("Insert query failed :"+ex);
-    			JOptionPane.showMessageDialog(null, "Insertion Failed !!!");
+    			JOptionPane.showMessageDialog(null, ex.getMessage());
     		}
     	}
     	

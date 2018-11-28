@@ -128,7 +128,7 @@ public class ApplyLeave extends javax.swing.JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				Connection c = loginpage.createLoginpage().getConnection();
 				try {
-					PreparedStatement p = c.prepareStatement("insert into leavesubmissions(eid,date,enddate,type,reason,status) values(?,?,?,?,?)");
+					PreparedStatement p = c.prepareStatement("insert into leavesubmissions(eid,date,enddate,type,reason,status) values(?,?,?,?,?,?)");
 					p.setString(1, loginpage.geteid());
 					String begindate = jSpinner1.getValue()+"-"+jSpinner3.getValue()+"-"+jSpinner2.getValue();
 					String enddate =  jSpinner7.getValue()+"-"+jSpinner9.getValue()+"-"+jSpinner8.getValue();
@@ -139,7 +139,9 @@ public class ApplyLeave extends javax.swing.JFrame {
 					p.setDate(2, sqlDate);
 					p.setDate(3, sqlDate2);
 					p.setString(4, jComboBox1.getSelectedItem().toString());
-					p.setString(5, "Pending");
+					p.setString(5, jTextArea1.getText());
+					p.setString(6, "Pending");
+					p.executeUpdate();
 				} catch ( SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

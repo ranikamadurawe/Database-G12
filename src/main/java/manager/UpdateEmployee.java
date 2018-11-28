@@ -28,14 +28,14 @@ public class UpdateEmployee extends javax.swing.JFrame {
         initComponents();
         c = loginpage.createLoginpage().getConnection();
         
-        try {						//only for check 			/////////////////////////////////**
-			//c =( Connection)DriverManager.getConnection("jdbc:mysql://localhost/welfare", "root", "");
-		}catch(Exception e) {
-			System.out.println("Conn error");
-		}
-        System.out.println(c);
+//        try {						//only for check
+//			//c =( Connection)DriverManager.getConnection("jdbc:mysql://localhost/welfare", "root", "");
+//		}catch(Exception e) {
+//			System.out.println("Conn error");
+//		}
+//        System.out.println(c);
         
-        myid = loginpage.geteid();					/////////////////**
+        myid = loginpage.geteid();
         subID = "";
         
         try{
@@ -55,7 +55,7 @@ public class UpdateEmployee extends javax.swing.JFrame {
         	queryInit = "select pgid,salary from paygrade";
 			rsInit = sInit.executeQuery(queryInit);
 			while( rsInit.next() ) {
-				jComboBox2.addItem( rsInit.getString(2) );
+				jComboBox2.addItem( rsInit.getString(1) );
 			}
 			rsInit.close();
 			
@@ -68,7 +68,7 @@ public class UpdateEmployee extends javax.swing.JFrame {
 			rsInit.close();
 			
 			//load job titles
-        	queryInit = "select distinct name from jobtitiles";
+        	queryInit = "select distinct rolename from jobtitiles";
 			rsInit = sInit.executeQuery(queryInit);
 			while( rsInit.next() ) {
 				jComboBox4.addItem( rsInit.getString(1) );
@@ -355,7 +355,7 @@ public class UpdateEmployee extends javax.swing.JFrame {
 	    	String query1 = "select * from (employeepersonal natural join "
 								+ "(select eid,name as department,status,title from employeedetails left join department using(deptid)) as t1) "
 								+ "left join "
-								+ "(select eid,salary from emppay left join paygrade on (emppay.epid = paygrade.pgid) where eid='" + subID + "') as t2 "
+								+ "(select eid,epid from emppay where eid='" + subID + "') as t2 "
 								+ "using(eid) where eid='" + subID + "'";
 	    	
 	    	String query2 = "select contact from empcontact where eid='" + subID + "'";
@@ -444,7 +444,7 @@ public class UpdateEmployee extends javax.swing.JFrame {
     								+ "title='" + job + "' "
     							+ "WHERE eid='" + eid + "'";
     			
-    			String query3 = "UPDATE emppay SET epid=(select pgid from paygrade where salary=" + payg + ")";
+    			String query3 = "UPDATE emppay SET epid='" + payg + "'";
     			
     			String query4 = "DELETE FROM empcontact WHERE eid='" + eid + "'";
     			String query5 = "INSERT INTO empcontact values";

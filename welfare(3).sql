@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2018 at 06:18 PM
+-- Generation Time: Nov 28, 2018 at 07:25 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -119,7 +119,9 @@ INSERT INTO `empcontact` (`eid`, `contact`) VALUES
 ('e0007', '0912233268'),
 ('e0009', '1234567890'),
 ('e0010', '8321321332'),
-('e0012', '0999999999');
+('e0012', '0999999999'),
+('e1235', '1111111111'),
+('e1236', '1234567890');
 
 --
 -- Triggers `empcontact`
@@ -159,13 +161,19 @@ CREATE TABLE `empemergenct` (
 INSERT INTO `empemergenct` (`cid`, `name`, `phone`, `email`, `eid`) VALUES
 ('c0001', 'ranika', '077123456', 'ranika@gmail.com', 'e0001'),
 ('c0002', 'sachith', '011123456', 'sachith@gmail.com', 'e0002'),
-('c0003', 'Thamindu', '076123456', 'thamindu@gmail.com', 'e0003');
+('c0003', 'Thamindu', '076123456', 'thamindu@gmail.com', 'e0003'),
+('c0004', 'Hiran', '4444444444', '2@3.com', 'e1236');
 
 --
 -- Triggers `empemergenct`
 --
 DELIMITER $$
-CREATE TRIGGER `checkemergencyphone` BEFORE INSERT ON `empemergenct` FOR EACH ROW BEGIN
+CREATE TRIGGER `checkemergencyphone` BEFORE INSERT ON `empemergenct` FOR EACH ROW BEGIN 
+DECLARE TEMPKODE VARCHAR(5);
+select CONCAT('c',LPAD(CAST(substring_index(cid,'c',-1) as unsigned)+1,4,'0')) into TEMPKODE from empemergenct order by cid desc limit 1 ;
+
+SET NEW.cid := TEMPKODE;
+
 if (new.cid = '' or new.name=''  or new.phone=''  or new.email=''  or new.eid='') THEN
 	signal SQLSTATE '12345'
     	set MESSAGE_TEXT='Please fill out the form completly';
@@ -206,7 +214,9 @@ INSERT INTO `employeeadditional` (`eid`, `s`, `sda`, `No_Children`) VALUES
 ('e0007', 2, 'random', 4),
 ('e0009', 5, 'something', 0),
 ('e0010', 1, 'ela', 2),
-('e0012', 2, 'e', 5);
+('e0012', 2, 'e', 5),
+('e1235', NULL, NULL, NULL),
+('e1236', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -233,13 +243,15 @@ INSERT INTO `employeedetails` (`eid`, `supervisorid`, `deptid`, `status`, `title
 ('e0002', 'e0003', 'd0001', 'temporary', 'hr', 1),
 ('e0003', 'e0004', 'd0001', 'temporary', 'hr', 1),
 ('e0004', 'e0005', 'd0001', 'temporary', 'hr', 0),
-('e0005', NULL, 'd0001', 'temporary', 'hr', 0),
+('e0005', 'e1236', 'd0001', 'temporary', 'hr', 0),
 ('e0006', NULL, 'd0001', 'temporary', 'hr', 0),
 ('e0007', NULL, 'd0001', 'temporary', 'hr', 0),
 ('e0009', NULL, 'd0001', 'temporary', 'hr', 0),
 ('e0010', NULL, 'd0002', 'temporary', 'hr', 0),
 ('e0012', NULL, 'd0002', 'permanent', 'hr', NULL),
-('e1234', NULL, 'd0001', 'freelancer\r\n', 'admin', NULL);
+('e1234', NULL, 'd0001', 'freelancer\r\n', 'admin', NULL),
+('e1235', NULL, 'd0001', 'freelancer\r\n', 'admin', NULL),
+('e1236', NULL, 'd0001', 'permanent', 'Johhny', NULL);
 
 --
 -- Triggers `employeedetails`
@@ -259,7 +271,7 @@ DELIMITER $$
 CREATE TRIGGER `checkva` BEFORE INSERT ON `employeedetails` FOR EACH ROW BEGIN
 if (new.eid = '' or new.supervisorid=''  or new.deptid=''  or new.title=''  or new.status='') THEN
 	signal SQLSTATE '12345'
-    	set MESSAGE_TEXT='Please fill out the form completly';
+    	set MESSAGE_TEXT='Please fill out this form completly';
 end if;
 end
 $$
@@ -298,7 +310,9 @@ INSERT INTO `employeepersonal` (`eid`, `name`, `nic`, `nationality`, `maritalsta
 ('e0009', 'ran', '888888888v', 'pizza', 'Married', '0002-02-02', 'c', 'r2@d.com'),
 ('e0010', 'ranikz', '888858388v', '123', 'Married', NULL, 'ii', 'u@d.com'),
 ('e0012', 'ras', '214214214v', 'sdfsdf', 'Married', '0002-11-30', 'kkkkkk', 'h@hh.com'),
-('e1234', 'rabu', '555555555v', 'sdfsf', 'Married', NULL, 'adsd', 'd@g.com');
+('e1234', 'rabu', '555555555v', 'sdfsf', 'Married', NULL, 'adsd', 'd@g.com'),
+('e1235', 'e', '999999994v', '3', 'Married', NULL, 'd', 'ra@d.com'),
+('e1236', 'lak', '545454545v', 'zel', 'Married', NULL, 'd', 'd@l.com');
 
 --
 -- Triggers `employeepersonal`
@@ -307,7 +321,7 @@ DELIMITER $$
 CREATE TRIGGER `checknic` BEFORE INSERT ON `employeepersonal` FOR EACH ROW BEGIN
 if (new.eid = '' or new.name=''  or new.nationality=''  or new.maritalstatus=''  or new.address='') THEN
 	signal SQLSTATE '12345'
-    	set MESSAGE_TEXT='Please fill out the form completly';
+    	set MESSAGE_TEXT='Please fill out the form entily';
 end if;
 
 IF (NEW.nic REGEXP '^[0-9]{9}v$' ) = 0 THEN 
@@ -346,21 +360,27 @@ CREATE TABLE `emppay` (
 INSERT INTO `emppay` (`eid`, `epid`, `epf`) VALUES
 ('e0000', 'pg0001', 200),
 ('e0001', 'pg0001', 0),
-('e0002', 'pg0002', 0),
-('e0003', 'pg0003', 0),
+('e0002', 'pg0001', 0),
+('e0003', 'pg0001', 0),
 ('e0007', 'pg0001', 1001),
 ('e0009', 'pg0001', 5),
 ('e0010', 'pg0001', 200),
-('e0012', 'pg0001', 0);
+('e0012', 'pg0001', 0),
+('e1235', 'pg0001', 10),
+('e1236', 'pg0001', 10);
 
 --
 -- Triggers `emppay`
 --
 DELIMITER $$
 CREATE TRIGGER `empay` BEFORE INSERT ON `emppay` FOR EACH ROW BEGIN 
+if (new.epf='') THEN
+	signal SQLSTATE '12345'
+    	set MESSAGE_TEXT='Please drecheck the form';
+end if;
 if (new.eid = '' or new.epf=''  or new.epid='') THEN
 	signal SQLSTATE '12345'
-    	set MESSAGE_TEXT='Please fill out the form completly';
+    	set MESSAGE_TEXT='Please recheck the form';
 end if;
 IF (NEW.epf>101 ) THEN 
   SIGNAL SQLSTATE '12345'
@@ -441,10 +461,12 @@ CREATE TABLE `leaveleft` (
 --
 
 INSERT INTO `leaveleft` (`eid`, `annual`, `casual`, `maturity`, `nopay`) VALUES
-('e0001', 10, 10, 4, 1),
-('e0002', 3, 24, 5, 9),
-('e0003', 23, 26, 21, 7),
-('e0012', 0, 0, 50, 0);
+('e0001', 0, 0, 50, 0),
+('e0002', 9, 18, 2, 6),
+('e0003', 10, 15, 6, 7),
+('e0012', 0, 0, 50, 0),
+('e1235', 0, 0, 50, 0),
+('e1236', 0, 0, 49, 0);
 
 -- --------------------------------------------------------
 
@@ -469,19 +491,27 @@ CREATE TABLE `leavesubmissions` (
 INSERT INTO `leavesubmissions` (`eid`, `leaveid`, `type`, `date`, `enddate`, `reason`, `status`) VALUES
 ('e0001', 'l0005', 'casual', '2018-11-08', '2018-11-15', 'yay', ''),
 ('e0001', 'l0006', 'casual', '2018-11-29', '2018-11-30', 'yay', ''),
-('e0001', 'l0007', 'casual', '2018-11-29', '2018-11-30', 'yay', 'Pending');
+('e0001', 'l0007', 'casual', '2018-11-29', '2018-11-30', 'yay', 'Pending'),
+('e0001', 'l0008', 'annual', '2018-11-28', '2018-11-30', 'sick', 'Pending'),
+('e1236', 'l0009', 'maturity', '2020-05-11', '2020-05-11', 'd', 'Pending');
 
 --
 -- Triggers `leavesubmissions`
 --
 DELIMITER $$
 CREATE TRIGGER `checkday` BEFORE INSERT ON `leavesubmissions` FOR EACH ROW BEGIN 
-if (new.eid = '' or new.leaveid=''  or new.type=''  or new.date=''  or new.enddate='' or new.reason = '' or new.status='') THEN
+DECLARE TEMPKODE VARCHAR(5);
+
+select CONCAT('l',LPAD(CAST(substring_index(leaveid,'l',-1) as unsigned)+1,4,'0')) into TEMPKODE from leavesubmissions order by leaveid desc limit 1 ;
+
+SET NEW.LEAVEID := TEMPKODE;
+
+if (new.eid = ''  or new.type=''  or new.date=''  or new.enddate='' or new.reason = '' or new.status='') THEN
 	signal SQLSTATE '12345'
     	set MESSAGE_TEXT='Please fill out the form completly';
 end if;
 
-if (new.status != 'pending') THEN
+if (new.status != 'Pending') THEN
 	signal SQLSTATE '12345'
     	set MESSAGE_TEXT='a new leave cannot be already accepted';
 end if;
@@ -519,9 +549,10 @@ end if;
 if (new.type = 'annual') THEN 	
 	if(select annual from leaveleft where eid=new.eid)=0 THEN     			SIGNAL SQLSTATE '12345'          
     	SET MESSAGE_TEXT = 'You have no annual leaves remaning';     	ELSE     	
-        update leaveleft set annual=annual-1 where eid=new.eid;     	end if; 
+        update leaveleft set annual=annual-1 where eid=new.eid;
+        
+        end if; 
 end if;
-
 
 
 END
@@ -595,7 +626,8 @@ INSERT INTO `useraccount` (`eid`, `password`) VALUES
 ('e0002', 'temporary2'),
 ('e0003', 'temporary3'),
 ('e0004', 'ranikz'),
-('e0005', 'hi');
+('e0005', 'hi'),
+('e1236', 'temp');
 
 --
 -- Triggers `useraccount`
@@ -812,6 +844,14 @@ ALTER TABLE `leavesubmissions`
 --
 ALTER TABLE `useraccount`
   ADD CONSTRAINT `useraccount_ibfk_1` FOREIGN KEY (`eid`) REFERENCES `employeedetails` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `dailyupdate` ON SCHEDULE EVERY 1 DAY STARTS '2018-11-29 01:00:00' ON COMPLETION NOT PRESERVE ENABLE DO update leaveleft as e join (SELECT eid,nopay,maturity,annual,casual FROM emppay join paygrade on epid=pgid) as c on e.eid=c.eid set e.annual=c.annual,e.casual=c.casual,e.maturity=c.maturity,e.nopay=c.nopay$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
